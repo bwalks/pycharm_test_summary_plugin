@@ -1,0 +1,60 @@
+<idea-plugin>
+    <id>com.github.test.summary</id>
+    <name>Test Summary Assistant</name>
+    <version>1.0</version>
+    <vendor email="brendan.walker4@gmail.com" url="https://github.com/bwalks">Brendan Walker</vendor>
+    
+    <description><![CDATA[
+        Provides AI-powered summaries of test failures using OpenAI's GPT models.<br>
+        Features:
+        <ul>
+            <li>Automatic test failure analysis</li>
+            <li>Concise summaries of test failures</li>
+            <li>Integration with PyCharm's test runner</li>
+        </ul>
+    ]]></description>
+
+    <change-notes><![CDATA[
+        Initial release of the Test Summary Assistant plugin.
+    ]]></change-notes>
+
+    <!-- Minimum and maximum build of IDE compatible with plugin -->
+    <idea-version since-build="231" until-build="242.*"/>
+
+    <!-- Plugin dependencies -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.python</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Test listener -->
+        <testStatusListener implementation="com.github.test.summary.TestResultListener"/>
+        <projectService serviceImplementation="com.github.test.summary.TestResultListener"/>
+        
+        <!-- Settings -->
+        <applicationService serviceImplementation="com.github.test.summary.settings.TestSummarySettings"/>
+        <applicationConfigurable
+            parentId="tools"
+            instance="com.github.test.summary.settings.TestSummarySettingsConfigurable"
+            id="com.github.test.summary.settings.TestSummarySettingsConfigurable"
+            displayName="Test Summary Settings"/>
+        <applicationConfigurable
+            parentId="tools"
+            instance="com.github.test.summary.settings.OpenAiApiKeyConfigurable"
+            id="com.github.test.summary.settings.OpenAiApiKeyConfigurable"
+            displayName="OpenAI API Key"/>
+        
+        <!-- Tool Window -->
+        <toolWindow
+            id="Test Summary"
+            secondary="false"
+            icon="AllIcons.General.Test"
+            anchor="bottom"
+            factoryClass="com.github.test.summary.ui.TestSummaryToolWindow"
+            doNotActivateOnStart="false"/>
+        
+        <!-- Notifications -->
+        <notificationGroup
+            id="Test Summary"
+            displayType="BALLOON"/>
+    </extensions>
+</idea-plugin>
